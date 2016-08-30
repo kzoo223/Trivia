@@ -3,6 +3,14 @@ $(document).ready(function(){
 })
 
 
+//messages--------------------------
+var message = [{
+  correct: "You got it!",
+  incorrect: "Sorry!",
+  time: "Sorry out to time!"
+}];
+
+//question & answer array
 var questions = [
     {
     //1
@@ -37,20 +45,15 @@ var questions = [
 ];
 
 
-//messages
-var message = [{
-  correct: "You got it!",
-  incorrect: "Sorry!",
-  time: "Sorry out to time!"
-}]
 
-//Set Global Variables
+
+//Set Global Variables---------------------------------------
 
 var currentQuestion;
 var numCorrect;
 var numWrong;
 
-//New game conditions function
+//New game conditions function--------------------------------
 function newGame(){
   $("#questionArea").empty()
   $("#messageArea").empty()
@@ -59,9 +62,9 @@ function newGame(){
   numCorrect = 0;
   numWrong = 0;
   addQuestion();
-
 }
-//add question & answers to page
+
+//add question & answers to page-----------------------------------------
 function addQuestion(){
   $("#questionArea").html(questions[currentQuestion].ques);
   for (i=0; i<4; i++){
@@ -71,19 +74,37 @@ function addQuestion(){
     answerChoice.attr({'data-zIndex': i });
     $("#answerArea").append(answerChoice)
   }
-  //Set Onclick for answer divs
+  timer();
+  //Set Onclick for answer divs------------------------------------------
   $('.yourChoice').on('click',function(){
     answerSelection = $(this).data('zIndex');
-    clearInterval(time);
+    clearInterval(timer);
     answer();
   });
 }
 
-//timer
+//timer----------------------------------------------------
 
-//answer selection
+var seconds = 2
+
+function timer(){
+    timer = setInterval(decrement, 1000);
+}
+
+//setting for timer decrease
+function decrement(){
+  $("#timerArea").html("Time remaining: " + seconds)
+  seconds--
+  if (seconds == -1){
+  console.log(message.time)//why is this undefiined?
+  clearInterval(timer);
+  answer();
+  }
+}
+
 
 //answer display
+function answer();
 
 //win conditions
 
