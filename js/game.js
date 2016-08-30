@@ -64,6 +64,19 @@ function newGame(){
 //add question & answers to page
 function addQuestion(){
   $("#questionArea").html(questions[currentQuestion].ques);
+  for (i=0; i<4; i++){
+    var answerChoice = $("<div>")
+    answerChoice.text(questions[currentQuestion].ans[i])
+    answerChoice.addClass("yourChoice")
+    answerChoice.attr({'data-zIndex': i });
+    $("#answerArea").append(answerChoice)
+  }
+  //Set Onclick for answer divs
+  $('.yourChoice').on('click',function(){
+    answerSelection = $(this).data('zIndex');
+    clearInterval(time);
+    answer();
+  });
 }
 
 //timer
