@@ -4,13 +4,13 @@ $(document).ready(function(){
 
 
 //messages--------------------------
-var message = [{
+var message = {
   correct: "You got it!",
   incorrect: "Sorry!",
-  time: "Sorry out to time!"
-}];
+  time: "Sorry out of time!"
+};
 
-//question & answer array
+//question & answer array-------------------------------------------
 var questions = [
     {
     //1
@@ -52,6 +52,7 @@ var questions = [
 var currentQuestion;
 var numCorrect;
 var numWrong;
+var questionCounter
 
 //New game conditions function--------------------------------
 function newGame(){
@@ -64,28 +65,9 @@ function newGame(){
   addQuestion();
 }
 
-//add question & answers to page-----------------------------------------
-function addQuestion(){
-  $("#questionArea").html(questions[currentQuestion].ques);
-  for (i=0; i<4; i++){
-    var answerChoice = $("<div>")
-    answerChoice.text(questions[currentQuestion].ans[i])
-    answerChoice.addClass("yourChoice")
-    answerChoice.attr({'data-zIndex': i });
-    $("#answerArea").append(answerChoice)
-  }
-  timer();
-  //Set Onclick for answer divs------------------------------------------
-  $('.yourChoice').on('click',function(){
-    answerSelection = $(this).data('zIndex');
-    clearInterval(timer);
-    answer();
-  });
-}
-
 //timer----------------------------------------------------
 
-var seconds = 2
+var seconds = 1
 
 function timer(){
     timer = setInterval(decrement, 1000);
@@ -96,17 +78,56 @@ function decrement(){
   $("#timerArea").html("Time remaining: " + seconds)
   seconds--
   if (seconds == -1){
-  console.log(message.time)//why is this undefiined?
+  $("#messageArea").html(message.time);
   clearInterval(timer);
   answer();
   }
 }
 
+//add question & answers to page-----------------------------------------
+function addQuestion(){
+  $("#questionArea").html(questions[currentQuestion].ques);
+  for (i=0; i<4; i++){
+    var answerChoice = $("<div>")
+    answerChoice.text(questions[currentQuestion].ans[i])
+    answerChoice.addClass("yourChoice")
+    answerChoice.attr({'data-zindex': i });
+    $("#answerArea").append(answerChoice)
+  }
+  timer();
+  //Set Onclick for answer divs------------------------------------------
+  $('.yourChoice').on('click',function(){
+    answerSelection = $(this).data('zindex');
+    clearInterval(timer);
+    answer();
+  });
+}
+
+
 
 //answer display
-function answer();
+function answer(){
+  $('.yourChoice').empty();
+  $("#questionArea").empty();
+  var ansIndex = questions[currentQuestion].correct
+  var ansText = questions[currentQuestion].ans[questions[currentQuestion].ans];
+  
+  if((answerSelection == ansIndex) && (seconds > 0)){
+    $("#answerArea").html(message.correct)  
+    numCorrect++
+  }
+ 
+  else{
+    $("#answerArea").html(message.incorrect)
+  }
+    numWrong++
 
-//win conditions
+};
+
+//end game conditions ----- keept track of current question
+function questionTally(){
+
+}
 
 //reset
 
