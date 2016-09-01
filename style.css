@@ -1,0 +1,23 @@
+.topArea{
+  text-align:center;
+  background-color:white;
+  opacity: .8;
+  font-size: 30px;
+  font-color:black;
+  
+}
+
+#banner{
+  max-width: 100%;
+  align:center;
+  display: block;
+  margin: 0 auto;
+}
+
+body
+{
+   background-image: url("images/background.jpg");
+   max-width: 100%;
+   display: block;
+  margin: 0 auto;
+}

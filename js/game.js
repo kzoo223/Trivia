@@ -1,4 +1,6 @@
 $(document).ready(function(){
+  $("#banner").append("<img id='banner' src = 'images/nintendo.png'>")
+
   newGame();
 })
 
@@ -6,7 +8,7 @@ $(document).ready(function(){
 //messages--------------------------
 var message = {
   correct: "You got it!",
-  incorrect: "Sorry!",
+  incorrect: "Incorrect!",
   time: "Sorry out of time!"
 };
 
@@ -20,27 +22,27 @@ var questions = [
     },
     {
     //2
-    ques: "In this platforming game, a duo collects puzzle pieces to in a jouney to defeat the evil witch",
+    ques: "In this platforming game, a duo collects puzzle pieces on a journey to defeat the evil witch",
     ans: ["Kirby 64", "Paper Mario", "Banjo and Kazooie", "Donkey Kong 64"],
-    correct: 3
+    correct: 2
     },
     {
     //3
     ques: "Do a Barrel Roll! Was popularized by which Star Fox 64 character?",
     ans: ["Star Fox", "Slippy Toad", "Falco Lombardi", "Peppy Hare"],
-    correct: 4
+    correct: 3
     },
     {
     //4
     ques: "This game development company was known for creating a list of classics including, Donkey Kong 64, GoldenEye, and Perfect Dark",
     ans: ["HAL Laboratory", "Rare", "3D Realms", "Capcom"],
-    correct: 2
+    correct: 1
     },
     {
     //5
     ques: "This sword weilding hero is on a quest to save the princess and defeat ganondorf",
     ans: ["Zelda", "Link", "Conker", "Gex"],
-    correct: 2
+    correct: 1
     }
 ];
 
@@ -52,7 +54,8 @@ var questions = [
 var currentQuestion;
 var numCorrect;
 var numWrong;
-var questionCounter
+var questionCounter = 0
+console.log(questions.length)
 
 //New game conditions function--------------------------------
 function newGame(){
@@ -67,25 +70,12 @@ function newGame(){
 
 //timer----------------------------------------------------
 
-var seconds = 1
 
-function timer(){
-    timer = setInterval(decrement, 1000);
-}
-
-//setting for timer decrease
-function decrement(){
-  $("#timerArea").html("Time remaining: " + seconds)
-  seconds--
-  if (seconds == -1){
-  $("#messageArea").html(message.time);
-  clearInterval(timer);
-  answer();
-  }
-}
 
 //add question & answers to page-----------------------------------------
+var answerSelection
 function addQuestion(){
+  $("#answerArea").empty();
   $("#questionArea").html(questions[currentQuestion].ques);
   for (i=0; i<4; i++){
     var answerChoice = $("<div>")
@@ -93,8 +83,10 @@ function addQuestion(){
     answerChoice.addClass("yourChoice")
     answerChoice.attr({'data-zindex': i });
     $("#answerArea").append(answerChoice)
+
   }
-  timer();
+  
+  timerStart() 
   //Set Onclick for answer divs------------------------------------------
   $('.yourChoice').on('click',function(){
     answerSelection = $(this).data('zindex');
@@ -104,6 +96,26 @@ function addQuestion(){
 }
 
 
+var seconds
+var timeOut = true;
+
+function timerStart(){
+    seconds = 10
+    timer = setInterval(decrement, 1000);
+}
+
+//setting for timer decrease
+function decrement(){
+  $("#timerArea").html("Time remaining: " + seconds)
+  seconds--
+  if (seconds < 0){
+  $("#messageArea").html(message.time);
+  clearInterval(timer);
+  timeOut = false
+  answer();
+  }
+}
+
 
 //answer display
 function answer(){
@@ -112,20 +124,38 @@ function answer(){
   var ansIndex = questions[currentQuestion].correct
   var ansText = questions[currentQuestion].ans[questions[currentQuestion].ans];
   
-  if((answerSelection == ansIndex) && (seconds > 0)){
+  if((answerSelection == ansIndex) && (timeOut==true)){
     $("#answerArea").html(message.correct)  
     numCorrect++
   }
- 
+   else if ((answerSelection != ansIndex) && (timeOut==true)){
+    $("#answerArea").html(message.incorrect)
+    numWrong++
+  }
   else{
     $("#answerArea").html(message.incorrect)
-  }
     numWrong++
+    timeOut = false
+  }
+  currentQuestion++
+  questionCounter++
+  questionTally()
+    
 
 };
 
 //end game conditions ----- keept track of current question
 function questionTally(){
+
+  if (questionCounter === questions.length){
+    $("#messageArea").html("Game Over!")
+    $("#questionArea").html("You got " + numCorrect + " right!");
+    $("#answerArea").html("You got " + numWrong + " Wrong!")
+  }
+  else{
+    $("#messageArea").empty();
+    setTimeout(addQuestion, 2000);
+  }
 
 }
 
